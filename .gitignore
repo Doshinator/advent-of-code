@@ -1,0 +1,32 @@
+# Rust / Cargo
+**/target/
+**/Cargo.lock
+
+# Mac / editor files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# JetBrains / IntelliJ
+*.iml
+.idea/
+
+# OS temp files
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Logs
+*.log
+
+# Any build artifacts
+**/*.exe
+**/*.dll
+**/*.so
+**/*.dylib
+
+# Optional: ignore local resource files if you don't want them tracked
+# **/resources/
