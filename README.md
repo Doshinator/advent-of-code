@@ -22,21 +22,6 @@ This project uses a clean config-based architecture that eliminates the need to 
 
 ## Usage
 
-### Basic Usage (Hardcoded)
-
-```rust
-use avdent_2015::{app::App, config::Config};
-
-fn main() -> Result<(), std::io::Error> {
-    // Run Day 1 Part 1
-    let config = Config::new(1, 1);
-    let app = App::new(config);
-    app.run()?;
-    
-    Ok(())
-}
-```
-
 ### CLI Usage
 
 ```rust
