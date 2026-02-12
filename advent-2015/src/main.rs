@@ -1,20 +1,21 @@
-use avdent_2015::day1::{first_position_less_than_zero, parse_parenthese, read_input};
+use avdent_2015::{app::App, config::{self, Config}};
+use std::env;
 
 fn main() -> Result<(), std::io::Error> {
-    let path = format!(
-        "{}/resources/day1.txt",
-        env!("CARGO_MANIFEST_DIR")
-    );
-    let data = read_input(&path)?;
-    
-    // --- Part 1
-    let floor = parse_parenthese(&data);
-    println!("Floor:{}", floor);
+    let args: Vec<String> = env::args().collect();
 
-    // --- Part 2
-    if let Some(index) = first_position_less_than_zero(&data) {
-        println!("First position that's in the basement: {}", index + 1);
-    }
+    let (day, part) = if args.len() >= 3 {
+        let day = args[1].parse::<u8>().unwrap_or(1);
+        let part = args[2].parse::<u8>().unwrap_or(1);
+        (day, part)
+    } else {
+        println!("Usage: {} <day> <part>", args[0]);
+        println!("Defaulting to Day 1 Part 1");
+        (1, 1)
+    };
 
+    let config = Config::new(day, part);
+    let app = App::new(config);
+    app.run()?;
     Ok(())
 }
