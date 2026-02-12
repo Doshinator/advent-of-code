@@ -1,4 +1,4 @@
-use avdent_2015::{app::App, config::{self, Config}};
+use avdent_2015::{app::App, config::Config};
 use std::env;
 
 fn main() -> Result<(), std::io::Error> {
