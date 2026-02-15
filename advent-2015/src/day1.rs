@@ -82,7 +82,7 @@ pub fn solve(config: &Config) -> io::Result<()> {
                     println!("first position {}", index + 1);
                 }
             },
-            _ => eprintln!("Part {} not implemented for Day 1", config.part),
+            _ => eprintln!("Day {} Part {} not implemented", config.day, config.part),
         }
 
     Ok(())
