@@ -1,5 +1,8 @@
+use core::panic;
+
 use crate::config::Config;
 use crate::day1;
+use crate::day2::{solve_day2_part1, solve_day2_part2};
 
 pub struct App {
     config: Config,
@@ -23,7 +26,7 @@ impl App {
             1 => self.run_day1(),
             2 => self.run_day2(),
             _ => {
-                eprintln!("Day {} not yet implemented.", self.config.day);
+                eprintln!("Day {} Part {} not yet implemented.", self.config.day, self.config.part);
                 Ok(())
             }
         }
@@ -49,6 +52,28 @@ impl App {
     }
 
     fn run_day2(&self) -> std::io::Result<()> {
-        Ok(())
+        let path = self.config.input_path_str();
+
+        match self.config.part {
+            1 => {
+                match solve_day2_part1(path) {
+                    Ok(total_paper) => {
+                        println!("Total paper: {}", total_paper);
+                        Ok(())
+                    },
+                    Err(e) => panic!("Error {}", e)
+                }
+            },
+            2 => {
+                match solve_day2_part2(path) {
+                    Ok(total_ribbon) => {
+                        println!("Total Ribbion: {}", total_ribbon);
+                        Ok(())
+                    },
+                    Err(e) => panic!("Error {}", e),
+                }
+            },
+            _ => panic!("Upsupport part {}", self.config.part),
+        }
     }
 }

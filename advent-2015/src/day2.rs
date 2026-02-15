@@ -1,19 +1,59 @@
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Lines, Result};
-use std::path::Path;
+use std::io::{self, BufRead, BufReader};
 // Day 2
 // 2x3x4 -> (axb + axc + bxc) * 2 + min(axb, axc, bxc)
 
-pub fn file_path_lines(path: &str) {
-    if let Ok(lines) = read_lines(path) {
-        // Consumes the iterator, returns an (Optional) String
-        for line in lines.map_while(Result::ok) {
-            println!("{}", line);
+pub fn solve_day2_part1(path: &str) -> io::Result<i32> {
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+
+    let mut total_paper: i32 = 0;
+
+    for lines in reader.lines().map_while(Result::ok) {
+        let nums: Vec<i32> = lines
+            .split('x')
+            .filter_map(|s| s.parse::<i32>().ok())
+            .collect();
+
+        if nums.len() == 3 {
+            let (a, b, c) = (nums[0], nums[1], nums[2]);
+            let side1 = a * b;
+            let side2 = a * c;
+            let side3 = b * c;
+
+            let surface_area = 2 * (side1 + side2 + side3);
+            let slack = side1.min(side2).min(side3);
+
+            total_paper += surface_area + slack;
         }
     }
+
+    Ok(total_paper)
 }
 
-pub fn read_lines<P>(filename: P) -> Result<Lines<BufReader<File>>> where P: AsRef<Path> {
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
+pub fn solve_day2_part2(path: &str) -> io::Result<i32> {
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+
+    let mut total_ribbion = 0;
+
+    for lines in reader.lines().map_while(Result::ok) {
+        let parts: Vec<i32> = lines
+            .split('x')
+            .filter_map(|s| s.parse::<i32>().ok())
+            .collect();
+
+        if parts.len() == 3 {
+            let (a, b, c) = (parts[0], parts[1], parts[2]);
+            let mut sides = [a, b, c];
+            sides.sort();
+            
+            let wrap = 2 * (sides[0] + sides[1]);
+            let bow = a * b * c;
+
+            total_ribbion += wrap + bow;
+        }
+    }
+
+    Ok(total_ribbion)
 }
