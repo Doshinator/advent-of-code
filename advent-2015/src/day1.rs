@@ -4,6 +4,7 @@
 // keep i64 and return final answer
 
 use std::{fs, io};
+use crate::config::Config;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Parenthesis {
@@ -54,7 +55,6 @@ pub fn parse_parenthese(input: &Data) -> i64 {
 
 // part 2
 // enumerate to find the first position floor < 0
-
 pub fn first_position_less_than_zero(input: &Data) -> Option<usize> {
     let mut floor: i64 = 0;
     for (i, p) in input.vector.iter().enumerate() {
@@ -68,4 +68,22 @@ pub fn first_position_less_than_zero(input: &Data) -> Option<usize> {
     }
 
     None
+}
+
+pub fn solve(config: &Config) -> io::Result<()> {
+    let data = read_input(config.input_path_str())?;
+        match config.part {
+            1 => {
+                let floor = parse_parenthese(&data);
+                println!("{} floor", floor);
+            },
+            2 => {
+                if let Some(index) = first_position_less_than_zero(&data) {
+                    println!("first position {}", index + 1);
+                }
+            },
+            _ => eprintln!("Part {} not implemented for Day 1", config.part),
+        }
+
+    Ok(())
 }

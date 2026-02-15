@@ -1,5 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
+
+use crate::config::Config;
 // Day 2
 // 2x3x4 -> (axb + axc + bxc) * 2 + min(axb, axc, bxc)
 
@@ -56,4 +58,22 @@ pub fn solve_day2_part2(path: &str) -> io::Result<i32> {
     }
 
     Ok(total_ribbion)
+}
+
+
+pub fn solve(config: &Config) -> std::io::Result<()> {
+    let path = config.input_path_str();
+
+    match config.part {
+        1 => {
+            let total_paper = solve_day2_part1(path)?;
+            println!("Total paper: {}", total_paper);
+        },
+        2 => {
+            let total_ribbon = solve_day2_part2(path)?;
+            println!("Total ribbon: {}", total_ribbon);
+        },
+        _ => panic!("Upsupport part {}", config.part),
+    }
+    Ok(())
 }
