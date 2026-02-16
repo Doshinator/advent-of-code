@@ -44,5 +44,6 @@ fn solve_part1(path: &str) -> std::io::Result<i32> {
 }
 
 fn solve_part2(path: &str) -> std::io::Result<i32> {
+    println!("Checking for commit changes from main");
     todo!()
 }
