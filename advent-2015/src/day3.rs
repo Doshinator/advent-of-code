@@ -44,6 +44,24 @@ fn solve_part1(path: &str) -> std::io::Result<i32> {
 }
 
 fn solve_part2(path: &str) -> std::io::Result<i32> {
-    println!("Checking for commit changes from main");
-    todo!()
+    let file = fs::read_to_string(path)?;
+
+    let mut santa = (0, 0);
+    let mut robot_santa = (0, 0);
+    let mut houses: HashSet<(i32, i32)> = HashSet::new();
+    houses.insert(santa);
+
+    for (i, ch) in file.chars().enumerate() {
+        let current = if i % 2 == 0 { &mut santa } else { &mut robot_santa };
+
+        match ch {
+            '^' => current.1 += 1,
+            'v' => current.1 -= 1,
+            '>' => current.0 += 1,
+            '<' => current.0 -= 1,
+            _ => {},
+        }
+        houses.insert(*current);
+    }
+    Ok(houses.len() as i32)
 }
