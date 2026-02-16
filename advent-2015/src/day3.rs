@@ -1,6 +1,5 @@
 use std::fs;
-use std::{collections::HashSet, io::BufReader};
-use std::io::{BufRead};
+use std::collections::HashSet;
 
 use crate::config::Config;
 
