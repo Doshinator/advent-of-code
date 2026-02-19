@@ -2,6 +2,7 @@ use crate::config::Config;
 use crate::day1;
 use crate::day2;
 use crate::day3;
+use crate::day4;
 
 pub struct App {
     config: Config,
@@ -25,6 +26,7 @@ impl App {
             1 => day1::solve(&self.config),
             2 => day2::solve(&self.config),
             3 => day3::solve(&self.config),
+            4 => day4::solve(&self.config),
             _ => {
                 eprintln!("Day {} Part {} not yet implemented.", self.config.day, self.config.part);
                 Ok(())
