@@ -1,4 +1,5 @@
 use md5::{Digest, Md5};
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
 use crate::config::Config;
 
@@ -26,7 +27,8 @@ fn solve_part1(key: &str) -> i32 {
         let mut hash = Md5::new();
         hash.update(format!("{}{}", key, counter));
         let result = hash.finalize();
-
+        
+        // each byte (u8) represents 2 hex char; we're checking first 2.5 byte -> 5 char
         if result[0] == 0 && result[1] == 0 && (result[2] & 0xf0) == 0 {
             return counter;
         }
@@ -34,6 +36,15 @@ fn solve_part1(key: &str) -> i32 {
     }
 }
 
-fn solve_part2(key: &str) -> i32 {
-    todo!()
+fn solve_part2(key: &str) -> u32 {
+    let ans = (1..u32::MAX)
+        .into_par_iter()
+        .find_first(|&n| {
+            let mut hash = Md5::new();
+            hash.update(format!("{}{}", key, n));
+            let result = hash.finalize();
+            result[0] == 0 && result[1] == 0 && result[2] == 0
+        });
+
+    ans.unwrap()
 }
