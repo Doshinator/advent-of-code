@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
@@ -8,11 +9,11 @@ pub fn solve(config: &Config) -> std::io::Result<()> {
 
     match config.part {
         1 => {
-            let result = solve_part_1(path);
-            println!("Day {} Part {}. Total nice strings:{}", config.day, config.part, result.unwrap());
+            let result = solve_part_1(path)?;
+            println!("Day {} Part {}. Total nice strings:{}", config.day, config.part, result);
         },
         2 => {
-            let result = solve_part_2 ();
+            let result = solve_part_2 (path)?;
             println!("Day {} Part {} result: {}", config.day, config.part, result);
         },
         _ => panic!("Day {} Part {} not implemented", config.day, config.part),
@@ -24,17 +25,22 @@ fn solve_part_1(path: &str) -> std::io::Result<i32> {
     let lines = read_lines(path)?;
     let result = lines
         .map_while(Result::ok)
-        .filter(|line| nice_str(line))
+        .filter(|line| nice_str_part_1(line))
         .count() as i32;
         
     Ok(result)
 }
 
-fn solve_part_2() -> i32 {
-    todo!()
+fn solve_part_2(path: &str) -> std::io::Result<i32> {
+    let lines = read_lines(path)?;
+    let result = lines
+        .map_while(Result::ok)
+        .filter(|line| nice_str_part_2(line))
+        .count() as i32;
+    Ok(result)
 }
 
-fn nice_str(s: &str) -> bool {
+fn nice_str_part_1(s: &str) -> bool {
     if !contains_three_vowels(s) {
         return false;
     }
@@ -66,4 +72,32 @@ fn contains_three_vowels(s: &str) -> bool {
     s.chars()
         .filter(|c| vowels.contains(c))
         .count() >= 3
+}
+
+fn nice_str_part_2(s: &str) -> bool {
+    has_repeated_pair(s) && has_repeat_with_gap(s)
+}
+
+fn has_repeat_with_gap(s: &str) -> bool {
+    s.as_bytes()
+        .windows(3)
+        .any(|w| w[0] == w[2])
+}
+
+fn has_repeated_pair(s: &str) -> bool {
+    let bytes = s.as_bytes();
+    let mut seen: HashMap<(u8, u8), usize> = HashMap::new();
+    for i in 0..bytes.len().saturating_sub(1) {
+        let pair = (bytes[i], bytes[i + 1]);
+
+        if let Some(&prev_index) = seen.get(&pair) {
+            if i >= prev_index + 2 {
+                return true;
+            }
+        } else {
+            seen.insert(pair, i);
+        }
+    }
+
+    false
 }
