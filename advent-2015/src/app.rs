@@ -30,6 +30,7 @@ impl App {
             3 => day3::solve(&self.config),
             4 => day4::solve(&self.config),
             5 => day5::solve(&self.config),
+            6 => day6::solve(&self.config),
             _ => {
                 eprintln!("Day {} Part {} not yet implemented.", self.config.day, self.config.part);
                 Ok(())
