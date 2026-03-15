@@ -4,6 +4,7 @@ use crate::day2;
 use crate::day3;
 use crate::day4;
 use crate::day5;
+use crate::day6;
 
 pub struct App {
     config: Config,
