@@ -12,7 +12,8 @@ pub fn solve(config: &Config) -> std::io::Result<()> {
             println!("Lights on: {}", result);
         },
         2 => {
-            todo!();
+            let result = solve_part_2(&path)?;
+            println!("Total brightness: {}", result);
         },
         _ => panic!("Invalid part {}", config.part),
     }
@@ -30,6 +31,19 @@ fn solve_part_1(path: &str) -> std::io::Result<usize> {
     }
 
     Ok(count_lights(&grid))
+}
+
+fn solve_part_2(path: &str) -> std::io::Result<u32> {
+    let lines = read_lines(path)?;
+    let mut grid = vec![vec![0u32; 1000]; 1000];
+
+    for line in lines {
+        let line = line?;
+        let instruction = parse_lines(&line);
+        apply_instruction_part2(instruction, &mut grid);
+    }
+
+    Ok(count_brightness(&grid))
 }
 
 
@@ -82,13 +96,32 @@ fn apply_instruction(instruction: Instruction, grid: &mut Vec<Vec<bool>>) {
     }
 }
 
-fn apply_region<F>(
-    grid: &mut Vec<Vec<bool>>,
+fn apply_instruction_part2(instruction: Instruction, grid: &mut Vec<Vec<u32>>) {
+    match instruction {
+        Instruction::Toggle(start, end) => {
+            apply_region(grid, start, end, |light| *light += 2);
+        },
+        Instruction::On(start, end) => {
+            apply_region(grid, start, end, |light| *light += 1);
+        },
+        Instruction::Off(start, end) => {
+            apply_region(grid, start, end, |light| {
+                if *light > 0 {
+                    *light -= 1;
+                }
+            });
+        },
+    }
+}
+
+fn apply_region<T, F>(
+    grid: &mut Vec<Vec<T>>,
     start: (usize, usize),
     end: (usize, usize),
     mut op: F,
-) 
-where F: FnMut(&mut bool), 
+)
+where
+    F: FnMut(&mut T),
 {
     let (x1, y1) = start;
     let (x2, y2) = end;
@@ -106,4 +139,11 @@ fn count_lights(grid: &Vec<Vec<bool>>) -> usize {
         .flatten()
         .filter(|&&light| light == true)
         .count()
+}
+
+fn count_brightness(grid: &Vec<Vec<u32>>) -> u32 {
+    grid
+        .iter()
+        .flatten()
+        .sum()
 }
