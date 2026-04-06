@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-use rayon::string;
 
 use crate::config::Config;
 
@@ -33,7 +32,10 @@ fn solve_day7_part1(path: &str) -> std::io::Result<u16> {
         wires.insert(instr.target, instr.expr);
     }
 
-    Ok(0101)
+    let mut cache: HashMap<String, u16> = HashMap::new();
+    let result = eval("a", &wires, &mut cache);
+
+    Ok(result)
 }
 
 fn solve_day7_part2() {
@@ -98,8 +100,40 @@ fn parse_line(line: &str) -> Instruction {
     }
 }
 
-fn eval() {
-    todo!()
+fn eval(
+    wire: &str,
+    wires: &HashMap<String, Expr>,
+    cache: &mut HashMap<String, u16>,
+) -> u16 {
+    // base case
+    if let Ok(num) = wire.parse::<u16>() {
+        return num;
+    }
+
+    // already computed
+    if let Some(&val) = cache.get(wire) {
+        return val;
+    }
+
+    // recurse
+    let value = match &wires[wire] {
+        Expr::Value(v) => *v,
+
+        Expr::Wire(w) => eval(w, wires, cache),
+
+        Expr::And(a, b) => eval(a, wires, cache) & eval(b, wires, cache),
+
+        Expr::Or(a, b) => eval(a, wires, cache) | eval(b, wires, cache),
+
+        Expr::Not(a) => !eval(a, wires, cache),
+
+        Expr::LShift(a, n) => eval(a, wires, cache) << n,
+
+        Expr::RShift(a, n) => eval(a, wires, cache) >> n,
+    };
+
+    cache.insert(wire.to_string(), value);
+    value
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
