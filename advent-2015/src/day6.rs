@@ -1,7 +1,5 @@
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
 use crate::config::Config;
+use crate::util::read_lines;
 
 pub fn solve(config: &Config) -> std::io::Result<()> {
     let path = config.input_path_str();
@@ -44,13 +42,6 @@ fn solve_part_2(path: &str) -> std::io::Result<u32> {
     }
 
     Ok(count_brightness(&grid))
-}
-
-
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where P: AsRef<Path>, {
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
 }
 
 enum Instruction {
