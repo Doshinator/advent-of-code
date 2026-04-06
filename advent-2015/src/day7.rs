@@ -14,8 +14,9 @@ pub fn solve(config: &Config) -> std::io::Result<()> {
             println!("Result: {}", result);
         },
         2 => {
-            println!("Result:");
-            let result = solve_day7_part2();
+            let signal_a = solve_day7_part1(path)?;
+            let result = solve_day7_part2(path, signal_a)?;
+            println!("Result: {}", result);
         },
         _ => panic!("Invalid part: {}", config.part),
     }
@@ -38,8 +39,22 @@ fn solve_day7_part1(path: &str) -> std::io::Result<u16> {
     Ok(result)
 }
 
-fn solve_day7_part2() {
-    todo!()
+fn solve_day7_part2(path: &str, signal_a: u16) -> std::io::Result<u16> {
+    let lines = read_lines(path)?;
+    let mut wires: HashMap<String, Expr> = HashMap::new();
+
+    for line in lines {
+        let line = line?;
+        let instr = parse_line(&line);
+        wires.insert(instr.target, instr.expr);
+    }
+
+    wires.insert("b".to_string(), Expr::Value(signal_a));
+
+    let mut cache: HashMap<String, u16> = HashMap::new();
+    let result = eval("a", &wires, &mut cache);
+
+    Ok(result)
 }
 
 
